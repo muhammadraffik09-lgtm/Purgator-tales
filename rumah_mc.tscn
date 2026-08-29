@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://bk6kog50380y1"]
+
+[ext_resource type="Texture2D" uid="uid://bu66yaq42dn6s" path="res://Asset/Rumah_MC-removebg-preview.png" id="1_4lhy3"]
+[ext_resource type="Script" uid="uid://mxjj0yustmga" path="res://pintu.gd" id="2_6fpjp"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_yf5fn"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_4lhy3")
+}],
+"loop": 1,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yf5fn"]
+size = Vector2(384.25537, 599.4742)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_g4v7s"]
+size = Vector2(419.99966, 791.3058)
+
+[node name="Sprite2D" type="CharacterBody2D" unique_id=707554897]
+position = Vector2(285, 137)
+scale = Vector2(0.111904755, 0.08340644)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1467141990]
+scale = Vector2(1.0000001, 1)
+sprite_frames = SubResource("SpriteFrames_yf5fn")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1855785706]
+position = Vector2(-6.866455e-05, 11.989464)
+scale = Vector2(1.0000005, 1)
+shape = SubResource("RectangleShape2D_yf5fn")
+
+[node name="Area2D" type="Area2D" parent="." unique_id=1555581038]
+position = Vector2(285.9575, 59.94741)
+script = ExtResource("2_6fpjp")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=456954650]
+position = Vector2(-290.42554, 47.957886)
+scale = Vector2(1.000001, 1)
+shape = SubResource("RectangleShape2D_g4v7s")
+
+[connection signal="body_entered" from="Area2D" to="Area2D" method="_on_body_entered"]
+[connection signal="body_exited" from="Area2D" to="Area2D" method="_on_body_exited"]

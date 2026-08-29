@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://b8ms5ygoxq8oq"]
+
+[ext_resource type="Texture2D" uid="uid://7tudqch4agmb" path="res://Asset/image-removebg-preview.png" id="1_vux2o"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_g4v7s"]
+size = Vector2(20, 25)
+
+[node name="Node2D" type="Node2D" unique_id=215082967]
+
+[node name="ImageRemovebgPreview" type="Sprite2D" parent="." unique_id=2003368783]
+position = Vector2(375, 166)
+scale = Vector2(0.069, 0.073)
+texture = ExtResource("1_vux2o")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=784853655]
+position = Vector2(375, 166)
+shape = SubResource("RectangleShape2D_g4v7s")

@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bpq6co4t2frhq"
-path="res://.godot/imported/Desain_tanpa_judul-removebg-preview.png-783b1038c78fe6f4d48c52175653cf90.ctex"
+path="res://.godot/imported/Desain_tanpa_judul-removebg-preview.png-c3d5f044c1502a13c9158ba1e6d430ee.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Purgator tales/Asset/Desain_tanpa_judul-removebg-preview.png"
-dest_files=["res://.godot/imported/Desain_tanpa_judul-removebg-preview.png-783b1038c78fe6f4d48c52175653cf90.ctex"]
+source_file="res://Asset/Desain_tanpa_judul-removebg-preview.png"
+dest_files=["res://.godot/imported/Desain_tanpa_judul-removebg-preview.png-c3d5f044c1502a13c9158ba1e6d430ee.ctex"]
 
 [params]
 

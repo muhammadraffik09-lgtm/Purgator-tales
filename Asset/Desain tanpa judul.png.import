@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cm7me1sv3maf3"
-path="res://.godot/imported/Desain tanpa judul.png-8552e30b522ef0c71b6e767830589fc0.ctex"
+path="res://.godot/imported/Desain tanpa judul.png-95955df1e8d6ae8e5ec6ea0622c99250.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Purgator tales/Asset/Desain tanpa judul.png"
-dest_files=["res://.godot/imported/Desain tanpa judul.png-8552e30b522ef0c71b6e767830589fc0.ctex"]
+source_file="res://Asset/Desain tanpa judul.png"
+dest_files=["res://.godot/imported/Desain tanpa judul.png-95955df1e8d6ae8e5ec6ea0622c99250.ctex"]
 
 [params]
 
