@@ -15,6 +15,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="Purgator tales"
+<<<<<<< Updated upstream
 run/main_scene="uid://cwt7agss7uxiu"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
@@ -74,6 +75,14 @@ masuk={
 [internationalization]
 
 locale/translations_pot_files=PackedStringArray("res://percakapan.dialogue")
+=======
+config/features=PackedStringArray("4.7", "GL Compatibility")
+config/icon="res://icon.svg"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/nklbdev.importality/plugin.cfg")
+>>>>>>> Stashed changes
 
 [rendering]
 
