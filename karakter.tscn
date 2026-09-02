@@ -235,6 +235,7 @@ zoom = Vector2(3, 3)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1524648848]
 position = Vector2(287, 175)
+scale = Vector2(0.9487172, 1)
 shape = SubResource("CircleShape2D_g4v7s")
 
 [node name="Marker2D" type="Marker2D" parent="." unique_id=944279749]

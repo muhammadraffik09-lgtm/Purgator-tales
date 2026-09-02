@@ -61,6 +61,17 @@ func arah_player(gerak):
 		else:
 			animasi.play("diam")
 func _ready():
-		add_to_group("player")
-			
+	add_to_group("player")
+	
+	# Jika player baru keluar dari rumah
+	if Global.is_spawning:
+		# Cari node Marker2D yang ada di group "spawn_point"
+		var spawn_node = get_tree().get_first_node_in_group("spawn_point")
+		if spawn_node:
+			global_position = spawn_node.global_position
+		
+		Global.is_spawning = false # Reset kembali statusnya
+		
 const DIALOGUE_FILE = preload("res://percakapan.dialogue")
+
+	# Cek apakah player baru saja keluar dari rumah
