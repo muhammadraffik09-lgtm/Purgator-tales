@@ -1,5 +1,11 @@
-# Godot 4+ Folder Cache
+# Cache lokal Godot (WAJIB di-ignore)
 .godot/
+
+# Build & Preset
+/android/
+export.cfg
+export_presets.cfg
+*.tmp
 
 # File Auto-generated oleh Godot (Import & Unique ID)
 *.import
