@@ -1,7 +1,7 @@
 extends Area2D
 
 var is_player_near = false
-@export var outside_house_scene : String = "res://awal.tscn"
+@export var outside_house_scene : String = "res://awal_bckup.tscn"
 
 func _on_body_entered(body):
 	if body.is_in_group("player"):
