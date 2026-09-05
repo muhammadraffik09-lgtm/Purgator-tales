@@ -28,6 +28,11 @@ Global="*uid://b6o3xrepdmewh"
 
 runtime/balloon_path="res://Asset/balloon.tscn"
 
+[display]
+
+window/size/viewport_width=1920
+window/size/viewport_height=1080
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/dialogue_manager/plugin.cfg", "res://addons/nklbdev.importality/plugin.cfg")
