@@ -1,28 +1,3 @@
-[gd_scene format=3 uid="uid://dsr7qdvpse1oa"]
-
-[ext_resource type="Texture2D" uid="uid://c33vwowgx3cgv" path="res://Asset/organik-removebg-preview.png" id="1_0yicv"]
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_g4v7s"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": ExtResource("1_0yicv")
-}],
-"loop": 1,
-"name": &"default",
-"speed": 5.0
-}]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_g4v7s"]
-size = Vector2(33, 39)
-
-[node name="Node2D" type="CharacterBody2D" unique_id=1446816257]
-
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1455072337]
-position = Vector2(226.62498, 140)
-scale = Vector2(0.09457965, 0.082364336)
-sprite_frames = SubResource("SpriteFrames_g4v7s")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=60159435]
-position = Vector2(227, 140)
-shape = SubResource("RectangleShape2D_g4v7s")
+version https://git-lfs.github.com/spec/v1
+oid sha256:f00be6356fcbaf8fe63d43b6098e98d3ffa64f1839a60c3ad41099563a79b180
+size 889

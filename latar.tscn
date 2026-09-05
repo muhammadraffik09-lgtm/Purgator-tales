@@ -1,8 +1,3 @@
-[gd_scene load_steps=2 format=3 uid="uid://bjadjaxbi8787"]
-
-[ext_resource type="Texture2D" uid="uid://cgdh3bln83cau" path="res://Asset/Gemini_Generated_Image_8jogvg8jogvg8jog.png" id="1_yepp3"]
-
-[node name="GeminiGeneratedImage8Jogvg8Jogvg8Jog" type="Sprite2D"]
-position = Vector2(583, 344)
-scale = Vector2(0.843411, 0.90921)
-texture = ExtResource("1_yepp3")
+version https://git-lfs.github.com/spec/v1
+oid sha256:d56237750fca5e24149859485aeec385c72f63ebfd1f97e4fba1e160008e025b
+size 359
