@@ -5,6 +5,7 @@ var arah = "diam"
 
 func _physics_process(delta):
 	gerak_player(delta)
+	
 
 func gerak_player(_delta):
 	if Input.is_action_pressed("ui_right"):
@@ -75,3 +76,8 @@ func _ready():
 const DIALOGUE_FILE = preload("res://percakapan.dialogue")
 
 	# Cek apakah player baru saja keluar dari rumah
+@onready var tilemap: TileMapLayer = $objek
+	
+
+	
+	# Cek apakah tile tersebut memiliki custom data 'occuluder' bernilai true
