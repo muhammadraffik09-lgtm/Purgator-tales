@@ -39,14 +39,14 @@ func play_move_animation(dir: Vector2) -> void:
 		if dir.y < 0:
 			sprite.play("walk_up")   # Jalan ke atas
 		else:
-			sprite.play("walk_down") # Jalan ke bawah
+			sprite.play("jalan_kebawah") # Jalan ke bawah
 
 # Fungsi untuk menentukan animasi saat berhenti (idle)
 func play_idle_animation() -> void:
 	# Memasang animasi idle sesuai arah terakhir animasi berjalan
 	if sprite.animation.begins_with("walk_up"):
 		sprite.play("idle_up")
-	elif sprite.animation.begins_with("walk_down"):
-		sprite.play("idle_down")
+	elif sprite.animation.begins_with("jalan_kebawah"):
+		sprite.play("jalan_kebawah")
 	else:
 		sprite.play("idle") # Atau "idle_right"
