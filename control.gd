@@ -17,3 +17,16 @@ func _on_pause_button_pressed():
 func _on_resume_button_pressed():
 	get_tree().paused = false
 	pause_menu.visible = false
+
+func _on_back_button_pressed():
+	$PauseMenu.visible = true
+	$PauseMenu/SettingsMenu.visible = false
+
+
+func _on_settings_menu_back_pressed():
+	$SettingsMenu.visible = false
+	$PauseMenu.visible = true
+
+func _on_setting_button_pressed():
+	$PauseMenu.visible = false
+	$SettingsMenu.visible = true
