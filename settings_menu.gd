@@ -2,11 +2,10 @@ extends Control
 
 signal back_pressed
 
-@onready var pause_menu = get_parent().get_node("PauseMenu")
-
 const SETTINGS_FILE := "user://settings.cfg"
 const SETTINGS_SECTION := "UI"
 const DEFAULT_TRANSPARENCY := 20.0
+
 
 func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -36,10 +35,12 @@ func _on_ui_transparency_slider_value_changed(value: float):
 func _apply_transparency(value: float):
 	var alpha = 1.0 - (value / 100.0)
 
-	$Panel.modulate.a = alpha
-	pause_menu.modulate.a = alpha
+	for node in get_tree().get_nodes_in_group("ui_transparent"):
+		if node is CanvasItem:
+			node.modulate.a = alpha
 
 	$Panel/SettingsScroll/SettingsList/UITransparency/TransparencyRow/UITransparencyValue.text = str(int(value)) + "%"
+
 
 func _save_transparency(value: float):
 	var config = ConfigFile.new()
