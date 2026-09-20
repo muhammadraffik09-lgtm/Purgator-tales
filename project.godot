@@ -25,6 +25,7 @@ GameState="*uid://bboowns0qmb61"
 DialogueManager="*uid://c3rodes2l3gxb"
 Global="*uid://b6o3xrepdmewh"
 LayarHitam1="*uid://cwa4ytddbo1ld"
+QuestManager="*uid://cu6hd43jpenqy"
 
 [dialogue_manager]
 

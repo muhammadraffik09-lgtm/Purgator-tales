@@ -59,3 +59,6 @@ func _on_main_menu_button_pressed():
 	if main_menu:
 		main_menu.visible = true
 		get_tree().paused = true
+
+func _on_quest_button_pressed():
+	$QuestMenu.visible = true

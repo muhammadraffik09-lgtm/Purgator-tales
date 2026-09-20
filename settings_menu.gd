@@ -4,7 +4,7 @@ signal back_pressed
 
 const SETTINGS_FILE := "user://settings.cfg"
 const SETTINGS_SECTION := "UI"
-const DEFAULT_TRANSPARENCY := 20.0
+const DEFAULT_TRANSPARENCY := 10.0
 
 
 func _ready():
