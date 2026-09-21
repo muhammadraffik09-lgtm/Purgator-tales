@@ -8,6 +8,13 @@ func _physics_process(delta):
 	
 
 func gerak_player(_delta):
+	# Jangan gerakkan karakter ketika pemain sedang mengetik di Search Bar
+	if get_viewport().gui_get_focus_owner() is LineEdit:
+		arah_player(false)
+		velocity.x = 0
+		velocity.y = 0
+		return
+
 	if Input.is_action_pressed("ui_right"):
 		arah = "kanan"
 		arah_player(true)
@@ -64,9 +71,8 @@ func arah_player(gerak):
 
 const DIALOGUE_FILE = preload("res://percakapan.dialogue")
 
-	# Cek apakah player baru saja keluar dari rumah
+# Cek apakah player baru saja keluar dari rumah
 @onready var tilemap: TileMapLayer = $objek
-	
 
-	
-	# Cek apakah tile tersebut memiliki custom data 'occuluder' bernilai true
+
+# Cek apakah tile tersebut memiliki custom data 'occuluder' bernilai true

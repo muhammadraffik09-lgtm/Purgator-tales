@@ -5,7 +5,7 @@ const CustomBalloon = preload("res://Asset/balloon.tscn")
 
 func _unhandled_input(event: InputEvent) -> void:
 	var animasi = $AnimatedSprite2D
-	if event.is_action_pressed("ui_accept"): # Tekan Enter / Spasi
+	if event.is_action_pressed("ui_accept"):
 		DialogueManager.show_example_dialogue_balloon(DIALOGUE_FILE, "start")
 	else:
 			animasi.play("idle_npc1")

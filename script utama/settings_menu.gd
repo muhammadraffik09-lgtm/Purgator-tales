@@ -1,10 +1,12 @@
 extends Control
 
+
 signal back_pressed
+
 
 const SETTINGS_FILE := "user://settings.cfg"
 const SETTINGS_SECTION := "UI"
-const DEFAULT_TRANSPARENCY := 10.0
+const DEFAULT_TRANSPARENCY := 20.0
 
 
 func _ready():
@@ -25,7 +27,6 @@ func _ready():
 	$Panel/SettingsScroll/SettingsList/UITransparency/TransparencyRow/UITransparencySlider.value = transparency
 
 	_apply_transparency(transparency)
-
 
 func _on_ui_transparency_slider_value_changed(value: float):
 	_apply_transparency(value)
@@ -56,5 +57,12 @@ func _save_transparency(value: float):
 	config.save(SETTINGS_FILE)
 
 
+# =========================================================
+# BACK BUTTON
+# =========================================================
+
 func _on_back_button_pressed():
+	if not UITransitionManager.try_transition():
+		return
+
 	back_pressed.emit()

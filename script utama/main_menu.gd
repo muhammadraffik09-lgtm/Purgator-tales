@@ -1,7 +1,9 @@
 extends Control
 
+
 @onready var settings_menu = $SettingsMenu
 @onready var credits_menu = $CreditsMenu
+
 
 var opened_from_pause: bool = false
 
@@ -13,8 +15,8 @@ func _ready():
 
 	get_tree().paused = true
 
-	$SettingsMenu.visible = false
-	$CreditsMenu.visible = false
+	settings_menu.visible = false
+	credits_menu.visible = false
 
 	if GameState.has_played:
 		$StartButton/StartLabel.text = "CONTINUE"
@@ -22,32 +24,38 @@ func _ready():
 		$StartButton/StartLabel.text = "START"
 
 func _on_start_button_pressed():
+	if not UITransitionManager.try_transition():
+		return
+
 	GameState.has_played = true
 
 	settings_menu.visible = false
 	credits_menu.visible = false
 
 	visible = false
+
 	get_tree().paused = false
 
-
 func _on_settings_button_pressed():
+	if not UITransitionManager.try_transition():
+		return
+
 	opened_from_pause = false
 
 	settings_menu.visible = true
 	credits_menu.visible = false
 
-
 func _on_credits_button_pressed():
+	if not UITransitionManager.try_transition():
+		return
+
 	opened_from_pause = false
 
 	credits_menu.visible = true
 	settings_menu.visible = false
 
-
 func _on_exit_button_pressed():
 	get_tree().quit()
-
 
 func _on_settings_menu_back_pressed():
 	settings_menu.visible = false
@@ -55,13 +63,11 @@ func _on_settings_menu_back_pressed():
 	if opened_from_pause:
 		_return_to_pause_menu()
 
-
 func _on_credits_menu_back_pressed():
 	credits_menu.visible = false
 
 	if opened_from_pause:
 		_return_to_pause_menu()
-
 
 func open_settings_from_pause():
 	opened_from_pause = true
@@ -78,7 +84,6 @@ func open_settings_from_pause():
 	settings_menu.visible = true
 	credits_menu.visible = false
 
-
 func open_credits_from_pause():
 	opened_from_pause = true
 
@@ -93,7 +98,6 @@ func open_credits_from_pause():
 
 	credits_menu.visible = true
 	settings_menu.visible = false
-
 
 func _return_to_pause_menu():
 	settings_menu.visible = false

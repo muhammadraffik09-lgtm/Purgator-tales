@@ -21,6 +21,7 @@ config/icon="res://icon.svg"
 
 [autoload]
 
+UITransitionManager="*uid://dk364emnggya6"
 GameState="*uid://bboowns0qmb61"
 DialogueManager="*uid://c3rodes2l3gxb"
 Global="*uid://b6o3xrepdmewh"

@@ -1,6 +1,8 @@
 extends Control
 
+
 const QUEST_ENTRY_SCENE = preload("res://scene pendukung/QuestEntry.tscn")
+
 
 @onready var active_quest_container: VBoxContainer = $QuestScroll/QuestList/ActiveQuestContainer
 @onready var completed_quest_container: VBoxContainer = $QuestScroll/QuestList/CompletedQuestContainer
@@ -13,7 +15,6 @@ func _ready():
 	QuestManager.quest_completed.connect(_on_quest_completed)
 
 	_refresh_quests()
-
 
 func _on_quest_added(quest: Dictionary):
 	_add_active_quest(quest)
@@ -54,6 +55,8 @@ func _clear_container(container: VBoxContainer):
 	for child in container.get_children():
 		child.queue_free()
 
-
 func _on_back_button_pressed():
+	if not UITransitionManager.try_transition():
+		return
+
 	visible = false
