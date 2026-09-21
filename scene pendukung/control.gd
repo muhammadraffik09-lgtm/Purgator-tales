@@ -15,6 +15,7 @@ func _on_pause_button_pressed():
 	else:
 		pause_menu.visible = true
 		get_tree().paused = true
+		pause_menu.select_first_button()
 
 
 func _on_resume_button_pressed():
@@ -62,3 +63,7 @@ func _on_main_menu_button_pressed():
 
 func _on_quest_button_pressed():
 	$QuestMenu.visible = true
+
+
+func _on_inventory_button_pressed():
+	$InventoryMenu.visible = true
