@@ -69,3 +69,10 @@ func _on_inventory_button_pressed():
 		return
 
 	$InventoryMenu.visible = true
+
+
+func _on_player_menu_button_pressed() -> void:
+	if not UITransitionManager.try_transition():
+		return
+
+	$HUD/PlayerMenu.visible = true
