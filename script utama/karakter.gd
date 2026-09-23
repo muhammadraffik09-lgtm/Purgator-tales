@@ -3,12 +3,17 @@ extends CharacterBody2D
 const kecepatan = 300
 var arah = "diam"
 
+const TRASH_BAG_CAPACITY := 15
+
+var trash_bag_items: Array[String] = []
+
+signal trash_bag_changed
+
 func _physics_process(delta):
 	gerak_player(delta)
 	
 
 func gerak_player(_delta):
-	# Jangan gerakkan karakter ketika pemain sedang mengetik di Search Bar
 	if get_viewport().gui_get_focus_owner() is LineEdit:
 		arah_player(false)
 		velocity.x = 0
@@ -69,10 +74,24 @@ func arah_player(gerak):
 		else:
 			animasi.play("diam")
 
+func add_trash_to_bag(trash_type: String) -> bool:
+	if trash_bag_items.size() >= TRASH_BAG_CAPACITY:
+		return false
+
+	trash_bag_items.append(trash_type)
+	trash_bag_changed.emit()
+
+	print("Sampah masuk Trash Bag: ", trash_type)
+	print("Trash Bag: ", trash_bag_items.size(), "/", TRASH_BAG_CAPACITY)
+
+	return true
+
+func is_trash_bag_full() -> bool:
+	return trash_bag_items.size() >= TRASH_BAG_CAPACITY
+
+func get_trash_bag_count() -> int:
+	return trash_bag_items.size()
+
 const DIALOGUE_FILE = preload("res://percakapan.dialogue")
 
-# Cek apakah player baru saja keluar dari rumah
 @onready var tilemap: TileMapLayer = $objek
-
-
-# Cek apakah tile tersebut memiliki custom data 'occuluder' bernilai true
