@@ -60,16 +60,19 @@ func _on_body_entered(body: Node2D) -> void:
 	if not body.has_method("add_trash_to_bag"):
 		return
 
-	var berhasil_masuk: bool = body.add_trash_to_bag(trash_id)
+	var berhasil_masuk: bool = body.add_trash_to_bag(
+		trash_id,
+		trash_type
+	)
 
 	if not berhasil_masuk:
-		print("Trash Bag penuh!")
+		print("Karung Sampah penuh!")
 		return
 
 	print(
-		"Sampah berhasil diambil: ",
+		"Sampah diambil: ",
 		trash_id,
-		" | Kategori: ",
+		" | ",
 		trash_type
 	)
 

@@ -3,9 +3,9 @@ extends CharacterBody2D
 const kecepatan = 300
 var arah = "diam"
 
-const TRASH_BAG_CAPACITY := 15
+const TRASH_BAG_CAPACITY := 20
 
-var trash_bag_items: Array[String] = []
+var trash_bag_items: Array[Dictionary] = []
 
 signal trash_bag_changed
 
@@ -74,20 +74,42 @@ func arah_player(gerak):
 		else:
 			animasi.play("diam")
 
-func add_trash_to_bag(trash_type: String) -> bool:
+func add_trash_to_bag(
+	trash_id: String,
+	trash_type: String
+) -> bool:
+
 	if trash_bag_items.size() >= TRASH_BAG_CAPACITY:
 		return false
 
-	trash_bag_items.append(trash_type)
+	var trash_data: Dictionary = {
+		"id": trash_id,
+		"type": trash_type
+	}
+
+	trash_bag_items.append(trash_data)
+
 	trash_bag_changed.emit()
 
-	print("Sampah masuk Trash Bag: ", trash_type)
-	print("Trash Bag: ", trash_bag_items.size(), "/", TRASH_BAG_CAPACITY)
+	print(
+		"Sampah masuk Karung: ",
+		trash_id,
+		" | ",
+		trash_type
+	)
+
+	print(
+		"Karung: ",
+		trash_bag_items.size(),
+		"/",
+		TRASH_BAG_CAPACITY
+	)
 
 	return true
 
 func is_trash_bag_full() -> bool:
 	return trash_bag_items.size() >= TRASH_BAG_CAPACITY
+
 
 func get_trash_bag_count() -> int:
 	return trash_bag_items.size()
