@@ -70,6 +70,9 @@ func _on_inventory_button_pressed():
 
 	$InventoryMenu.visible = true
 
+	if $InventoryMenu.has_method("refresh_inventory"):
+		$InventoryMenu.refresh_inventory()
+
 
 func _on_player_menu_button_pressed() -> void:
 	if not UITransitionManager.try_transition():

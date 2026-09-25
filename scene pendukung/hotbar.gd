@@ -95,3 +95,12 @@ func _unhandled_key_input(event: InputEvent):
 
 		KEY_5:
 			_select_slot_from_keyboard(4)
+
+func _get_item_texture(item_id: String) -> Texture2D:
+	match item_id:
+		"Karung Sampah":
+			return preload(
+				"res://Asset/Icon UI/Item/karung_sampah.png"
+			)
+
+	return null
