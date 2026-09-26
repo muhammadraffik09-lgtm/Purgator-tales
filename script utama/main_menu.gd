@@ -12,8 +12,9 @@ func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
 	visible = true
-
 	get_tree().paused = true
+
+	AudioManager.play_main_menu_bgm()
 
 	settings_menu.visible = false
 	credits_menu.visible = false
@@ -27,13 +28,15 @@ func _on_start_button_pressed():
 	if not UITransitionManager.try_transition():
 		return
 
+	AudioManager.play_ui_click()
+	AudioManager.play_gameplay_bgm()
+
 	GameState.has_played = true
 
 	settings_menu.visible = false
 	credits_menu.visible = false
 
 	visible = false
-
 	get_tree().paused = false
 
 func _on_settings_button_pressed():

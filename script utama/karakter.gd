@@ -9,70 +9,92 @@ var trash_bag_items: Array[Dictionary] = []
 
 signal trash_bag_changed
 
+
 func _physics_process(delta):
 	gerak_player(delta)
-	
+
 
 func gerak_player(_delta):
+	# Jangan bergerak saat sedang mengetik di LineEdit
 	if get_viewport().gui_get_focus_owner() is LineEdit:
 		arah_player(false)
+		AudioManager.stop_jalan()
 		velocity.x = 0
 		velocity.y = 0
 		return
 
+	# Jalan ke kanan
 	if Input.is_action_pressed("ui_right"):
 		arah = "kanan"
 		arah_player(true)
 		velocity.x = kecepatan
 		velocity.y = 0
+		AudioManager.play_jalan()
+
+	# Jalan ke kiri
 	elif Input.is_action_pressed("ui_left"):
 		arah = "kiri"
 		arah_player(true)
 		velocity.x = -kecepatan
 		velocity.y = 0
+		AudioManager.play_jalan()
+
+	# Jalan ke atas
 	elif Input.is_action_pressed("ui_up"):
 		arah = "atas"
 		arah_player(true)
 		velocity.x = 0
 		velocity.y = -kecepatan
+		AudioManager.play_jalan()
+
+	# Jalan ke bawah
 	elif Input.is_action_pressed("ui_down"):
 		arah = "bawah"
 		arah_player(true)
 		velocity.x = 0
 		velocity.y = kecepatan
+		AudioManager.play_jalan()
+
+	# Player berhenti
 	else:
 		arah_player(false)
+		AudioManager.stop_jalan()
 		velocity.x = 0
 		velocity.y = 0
-		
+
 	move_and_slide()
-	
+
+
 func arah_player(gerak):
 	var arah_sekarang = arah
 	var animasi = $AnimatedSprite2D
-	
+
 	if arah_sekarang == "kanan":
 		animasi.flip_h = false
 		if gerak:
 			animasi.play("jalan_kanan")
 		else:
 			animasi.play("diam")
+
 	elif arah_sekarang == "kiri":
 		animasi.flip_h = true
 		if gerak:
 			animasi.play("jalan_kiri")
 		else:
 			animasi.play("diam")
+
 	elif arah_sekarang == "atas":
 		if gerak:
 			animasi.play("jalan_atas")
 		else:
 			animasi.play("diam")
+
 	elif arah_sekarang == "bawah":
 		if gerak:
 			animasi.play("jalan_bawah")
 		else:
 			animasi.play("diam")
+
 
 func add_trash_to_bag(
 	trash_id: String,
@@ -107,12 +129,14 @@ func add_trash_to_bag(
 
 	return true
 
+
 func is_trash_bag_full() -> bool:
 	return trash_bag_items.size() >= TRASH_BAG_CAPACITY
 
 
 func get_trash_bag_count() -> int:
 	return trash_bag_items.size()
+
 
 const DIALOGUE_FILE = preload("res://percakapan.dialogue")
 

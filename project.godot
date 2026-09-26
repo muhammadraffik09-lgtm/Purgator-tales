@@ -19,6 +19,10 @@ run/main_scene="uid://cwt7agss7uxiu"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[audio]
+
+buses/default_bus_layout="uid://br556madj26gh"
+
 [autoload]
 
 UITransitionManager="*uid://dk364emnggya6"
@@ -28,6 +32,7 @@ Global="*uid://b6o3xrepdmewh"
 LayarHitam1="*uid://cwa4ytddbo1ld"
 QuestManager="*uid://cu6hd43jpenqy"
 InventoryManager="*uid://b7v3ng8dcw1u2"
+AudioManager="*uid://o7u084ejbqyd"
 
 [dialogue_manager]
 

@@ -69,11 +69,7 @@ func _on_body_entered(body: Node2D) -> void:
 		print("Karung Sampah penuh!")
 		return
 
-	print(
-		"Sampah diambil: ",
-		trash_id,
-		" | ",
-		trash_type
-	)
+	AudioManager.play_pickup_sampah()
 
+	print("Sampah diambil: ", trash_id, " | ", trash_type)
 	queue_free()

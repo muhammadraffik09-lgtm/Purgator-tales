@@ -135,6 +135,7 @@ func _open_tong_menu() -> void:
 		return
 
 	tong_menu.setup_bin(trash_type, self)
+	AudioManager.play_ui_click()
 	tong_menu.visible = true
 
 	_hide_interaction_prompt()

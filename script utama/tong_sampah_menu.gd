@@ -43,7 +43,8 @@ var processed_count: int = 0
 	$Panel/ProcessGrid/ProcessSlot17,
 	$Panel/ProcessGrid/ProcessSlot18,
 	$Panel/ProcessGrid/ProcessSlot19,
-	$Panel/ProcessGrid/ProcessSlot20
+	$Panel/ProcessGrid/ProcessSlot20,
+	$Panel/ProcessGrid/ProcessSlot21
 ]
 
 
@@ -324,18 +325,22 @@ func _show_result_slot(
 	if slot_index >= result_slots.size():
 		return
 
-	var slot: TextureButton = result_slots[slot_index]
+	var item_icon := result_slots[slot_index].get_node_or_null(
+		"ItemIcon"
+	) as TextureRect
 
-	slot.texture_normal = _get_result_texture(result_id)
-	slot.tooltip_text = result_id
+	if item_icon == null:
+		push_error(
+			"ResultSlot tidak memiliki child ItemIcon."
+		)
+		return
+
+	item_icon.texture = _get_result_texture(result_id)
+	item_icon.visible = true
 
 
-func _get_result_texture(
-	result_id: String
-) -> Texture2D:
-
+func _get_result_texture(result_id: String) -> Texture2D:
 	match result_id:
-
 		"Sampah Organik":
 			return preload(
 				"res://Asset/Icon UI/Item/sampah_kecil_organik.png"
@@ -404,40 +409,49 @@ func _show_process_slot(
 	if slot_index >= process_slots.size():
 		return
 
-	var slot: TextureButton = process_slots[slot_index]
+	var item_icon := process_slots[slot_index].get_node_or_null(
+		"ItemIcon"
+	) as TextureRect
 
-	slot.texture_normal = _get_trash_texture(trash_id)
-	slot.tooltip_text = trash_id
+	if item_icon == null:
+		return
 
-func _clear_process_slot(
-	slot_index: int
-) -> void:
+	item_icon.texture = _get_trash_texture(trash_id)
+	item_icon.visible = true
 
+func _clear_process_slot(slot_index: int) -> void:
 	if slot_index < 0:
 		return
 
 	if slot_index >= process_slots.size():
 		return
 
-	var slot: TextureButton = process_slots[slot_index]
+	var item_icon := process_slots[slot_index].get_node_or_null(
+		"ItemIcon"
+	) as TextureRect
 
-	slot.texture_normal = null
-	slot.tooltip_text = ""
+	if item_icon == null:
+		return
+
+	item_icon.texture = null
+	item_icon.visible = false
 
 
 func _clear_process_slots() -> void:
-
 	for i in range(process_slots.size()):
 		_clear_process_slot(i)
 
 func _clear_result_slots() -> void:
-
 	for i in range(result_slots.size()):
+		var item_icon := result_slots[i].get_node_or_null(
+			"ItemIcon"
+		) as TextureRect
 
-		var slot: TextureButton = result_slots[i]
+		if item_icon == null:
+			continue
 
-		slot.texture_normal = null
-		slot.tooltip_text = ""
+		item_icon.texture = null
+		item_icon.visible = false
 
 func _setup_process_slots() -> void:
 	for i in range(process_slots.size()):

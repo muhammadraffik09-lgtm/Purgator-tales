@@ -93,3 +93,7 @@ func remove_item_at(slot_index: int) -> bool:
 	refresh_slots()
 
 	return true
+
+
+func _on_back_button_pressed() -> void:
+	visible = false

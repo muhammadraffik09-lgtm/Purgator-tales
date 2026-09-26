@@ -1,38 +1,50 @@
 extends TextureButton
 
+var hover_active := false
 
 var trash_data: Dictionary = {}
-var bag_slot_index: int = -1
-var bag_menu: Control = null
+
+@onready var item_icon: TextureRect = $ItemIcon
 
 
-func setup(menu: Control, index: int) -> void:
-	bag_menu = menu
-	bag_slot_index = index
+func _ready() -> void:
+	item_icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	item_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	item_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+
+	mouse_entered.connect(_on_mouse_entered)
+	mouse_exited.connect(_on_mouse_exited)
+
+
+func setup(_menu: Control, _index: int) -> void:
+	pass
 
 
 func set_item(data: Dictionary) -> void:
 	trash_data = data
 
 	if trash_data.is_empty():
-		texture_normal = null
-		tooltip_text = ""
+		clear_item()
 		return
 
-	texture_normal = _get_trash_texture(
-		trash_data["id"]
-	)
+	var trash_id: String = str(trash_data.get("id", ""))
+
+	item_icon.texture = _get_trash_texture(trash_id)
+	item_icon.visible = item_icon.texture != null
 
 	tooltip_text = (
-		trash_data["id"]
+		trash_id
 		+ "\nKategori: "
-		+ trash_data["type"]
+		+ str(trash_data.get("type", ""))
 	)
 
 
 func clear_item() -> void:
 	trash_data = {}
-	texture_normal = null
+
+	item_icon.texture = null
+	item_icon.visible = false
+
 	tooltip_text = ""
 
 
@@ -40,13 +52,11 @@ func _get_drag_data(_at_position: Vector2):
 	if trash_data.is_empty():
 		return null
 
-	if bag_slot_index < 0:
-		return null
-
 	var preview := TextureRect.new()
 
-	preview.texture = texture_normal
+	preview.texture = item_icon.texture
 	preview.custom_minimum_size = Vector2(64, 64)
+	preview.size = Vector2(64, 64)
 	preview.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	preview.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 
@@ -54,15 +64,14 @@ func _get_drag_data(_at_position: Vector2):
 
 	return {
 		"source": self,
-		"bag_menu": bag_menu,
-		"bag_slot_index": bag_slot_index,
-		"trash_id": trash_data["id"],
-		"trash_type": trash_data["type"]
+		"trash_id": trash_data.get("id", ""),
+		"trash_type": trash_data.get("type", "")
 	}
 
 
 func _get_trash_texture(trash_id: String) -> Texture2D:
 	match trash_id:
+
 		"Kumpulan Tanah":
 			return preload(
 				"res://Asset/Icon UI/Item/Kumpulan Tanah (Orga).png"
@@ -94,3 +103,20 @@ func _get_trash_texture(trash_id: String) -> Texture2D:
 			)
 
 	return null
+
+func _on_mouse_entered() -> void:
+	hover_active = true
+
+
+func _on_mouse_exited() -> void:
+	hover_active = false
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if not event.pressed:
+		return
+
+	if event.keycode == KEY_K and hover_active:
+		var menu := get_tree().get_first_node_in_group("trash_bag_menu")
+
+		if menu:
+			menu.visible = true
