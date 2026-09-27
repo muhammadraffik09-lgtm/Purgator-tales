@@ -8,8 +8,7 @@ const ORGANIC_REQUIRED := 5
 const INORGANIC_REQUIRED := 5
 const B3_REQUIRED := 3
 
-const PROCESS_TIME := 1.0
-
+const PROCESS_TIME: float = 10.0
 
 var trash_type: String = ""
 
@@ -292,10 +291,13 @@ func take_result(slot_index: int) -> bool:
 	var item_id: String = item["id"]
 
 
-	var berhasil: bool = InventoryManager.add_item(
-		item_id,
-		1
-	)
+	var berhasil: bool = InventoryManager.add_item(item_id)
+
+	if not berhasil:
+		print("Inventory penuh.")
+		return false
+
+	InventoryManager.print_inventory()
 
 
 	if not berhasil:

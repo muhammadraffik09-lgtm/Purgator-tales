@@ -134,8 +134,48 @@ func _open_tong_menu() -> void:
 		)
 		return
 
+	# Siapkan menu Tong
 	tong_menu.setup_bin(trash_type, self)
+
+	# Cari Trash Bag pemain
+	var player_node: Node = get_tree().get_first_node_in_group("player")
+
+	if player_node == null:
+		push_error("TongSampah: Player tidak ditemukan.")
+		return
+
+	# Cari Trash Bag Menu
+	var bag_menu: Control = get_tree().get_first_node_in_group(
+		"trash_bag_menu"
+	)
+
+	if bag_menu == null:
+		push_error(
+			"TongSampah: Trash Bag Menu tidak ditemukan."
+		)
+		return
+
+	# Pindahkan sampah yang kategorinya sesuai
+	if bag_menu.has_method("transfer_matching_items_to_tong"):
+		var moved_count: int = bag_menu.transfer_matching_items_to_tong(
+			tong_menu
+		)
+
+		print(
+			"Sampah dipindahkan ke Tong ",
+			trash_type,
+			": ",
+			moved_count
+		)
+	else:
+		push_error(
+			"TongSampah: Trash Bag Menu tidak memiliki "
+			+ "fungsi transfer_matching_items_to_tong()."
+		)
+		return
+
 	AudioManager.play_ui_click()
+
 	tong_menu.visible = true
 
 	_hide_interaction_prompt()
@@ -144,7 +184,6 @@ func _open_tong_menu() -> void:
 		"Menu Tong dibuka: ",
 		trash_type
 	)
-	_hide_interaction_prompt()
 
 func show_prompt_again() -> void:
 	if not player_in_range:

@@ -1,58 +1,90 @@
 extends Node
 
-const INVENTORY_SIZE := 20
+const INVENTORY_CAPACITY: int = 20
 
-var inventory_items: Array = []
+var items: Array[Dictionary] = []
 
-
-func _ready() -> void:
-	inventory_items.resize(INVENTORY_SIZE)
-
-	_setup_initial_inventory()
+signal inventory_changed
 
 
-func _setup_initial_inventory() -> void:
-	for i in range(inventory_items.size()):
-		inventory_items[i] = null
-
-	inventory_items[0] = {
-		"id": "Karung Sampah",
-		"type": "Equipment"
-	}
-
-
-func add_item(
-	item_id: String,
-	amount: int = 1
-) -> bool:
-
-	if amount <= 0:
+func add_item(item_id: String, item_type: String = "") -> bool:
+	if not has_free_slot():
+		print("Inventory penuh.")
 		return false
 
-	for i in range(inventory_items.size()):
+	var item_data: Dictionary = {
+		"id": item_id,
+		"type": item_type
+	}
 
-		if inventory_items[i] == null:
-			continue
+	items.append(item_data)
+	inventory_changed.emit()
 
-		if inventory_items[i]["id"] == item_id:
+	print("Item masuk Inventory: ", item_id)
+	return true
 
-			inventory_items[i]["amount"] += amount
 
+func remove_item(item_id: String) -> bool:
+	for i in range(items.size()):
+		var item: Dictionary = items[i]
+
+		if item.get("id", "") == item_id:
+			items.remove_at(i)
+			inventory_changed.emit()
+
+			print("Item dihapus dari Inventory: ", item_id)
 			return true
 
-
-	# Cari slot kosong
-	for i in range(inventory_items.size()):
-
-		if inventory_items[i] == null:
-
-			inventory_items[i] = {
-				"id": item_id,
-				"amount": amount
-			}
-
-			return true
-
-
-	# Inventory penuh
 	return false
+
+
+func has_item(item_id: String) -> bool:
+	for item in items:
+		if item.get("id", "") == item_id:
+			return true
+
+	return false
+
+
+func get_item_count(item_id: String) -> int:
+	var count: int = 0
+
+	for item in items:
+		if item.get("id", "") == item_id:
+			count += 1
+
+	return count
+
+
+func has_free_slot() -> bool:
+	return items.size() < INVENTORY_CAPACITY
+
+
+func get_item_count_total() -> int:
+	return items.size()
+
+
+func clear_inventory() -> void:
+	items.clear()
+	inventory_changed.emit()
+
+func print_inventory() -> void:
+	print("=== INVENTORY ===")
+
+	for i in range(items.size()):
+		var item: Dictionary = items[i]
+		print(
+			"Slot ",
+			i + 1,
+			": ",
+			item.get("id", ""),
+			" | ",
+			item.get("type", "")
+		)
+
+	print(
+		"Total: ",
+		items.size(),
+		"/",
+		INVENTORY_CAPACITY
+	)

@@ -94,6 +94,53 @@ func remove_item_at(slot_index: int) -> bool:
 
 	return true
 
+func transfer_matching_items_to_tong(tong_menu: Node) -> int:
+	var player = get_tree().get_first_node_in_group("player")
+
+	if player == null:
+		return 0
+
+	if tong_menu == null:
+		return 0
+
+	if not tong_menu.has_method("can_accept_trash"):
+		return 0
+
+	var moved_count: int = 0
+
+	for i in range(player.trash_bag_items.size() - 1, -1, -1):
+		var item = player.trash_bag_items[i]
+
+		if item == null:
+			continue
+
+		var trash_id: String = item.get("id", "")
+		var trash_type: String = item.get("type", "")
+
+		if trash_id == "":
+			continue
+
+		if trash_type == "":
+			continue
+
+		if not tong_menu.can_accept_trash(trash_type):
+			continue
+
+		var berhasil: bool = tong_menu.try_add_trash(
+			trash_id,
+			trash_type
+		)
+
+		if not berhasil:
+			continue
+
+		player.trash_bag_items.remove_at(i)
+		moved_count += 1
+
+	player.trash_bag_changed.emit()
+	refresh_slots()
+
+	return moved_count
 
 func _on_back_button_pressed() -> void:
 	visible = false
