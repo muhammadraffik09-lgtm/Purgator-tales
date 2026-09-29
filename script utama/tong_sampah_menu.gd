@@ -65,6 +65,7 @@ func _ready() -> void:
 	_clear_result_slots()
 
 	_setup_process_slots()
+	_setup_result_slots()
 
 	_update_process_label()
 
@@ -275,7 +276,6 @@ func _add_result(
 	)
 
 func take_result(slot_index: int) -> bool:
-
 	if slot_index < 0:
 		return false
 
@@ -287,32 +287,32 @@ func take_result(slot_index: int) -> bool:
 	if item == null:
 		return false
 
-
 	var item_id: String = item["id"]
 
-
+	# Coba masukkan hasil ke Inventory
 	var berhasil: bool = InventoryManager.add_item(item_id)
 
-	if not berhasil:
-		print("Inventory penuh.")
-		return false
-
-	InventoryManager.print_inventory()
-
-
+	# Inventory penuh
 	if not berhasil:
 		print("Inventory penuh. Hasil tidak dapat diambil.")
 		return false
 
+	# Hapus hasil dari slot tong
 	result_items[slot_index] = null
 
-	result_slots[slot_index].texture_normal = null
-	result_slots[slot_index].tooltip_text = ""
+	# Bersihkan icon hasil
+	if slot_index < result_slots.size():
+		var item_icon := result_slots[slot_index].get_node_or_null(
+            "ItemIcon"
+		) as TextureRect
 
-	print(
-		"Hasil diambil: ",
-		item_id
-	)
+		if item_icon:
+			item_icon.texture = null
+			item_icon.visible = false
+
+		result_slots[slot_index].tooltip_text = ""
+
+	print("Hasil diambil: ", item_id)
 
 	return true
 

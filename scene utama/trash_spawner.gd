@@ -1,6 +1,6 @@
 extends Node2D
 
-const MAX_TRASH_ON_MAP := 100
+const MAX_TRASH_ON_MAP := 150
 const MAX_RESPAWN_PER_BATCH := 25
 const RESPAWN_INTERVAL := 30.0
 

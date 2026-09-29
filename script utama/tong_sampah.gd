@@ -87,13 +87,18 @@ func _unhandled_input(event: InputEvent) -> void:
 	if not player_in_range:
 		return
 
-	if not event.pressed:
+	if not event is InputEventKey:
 		return
 
-	if event.is_echo():
+	var key_event := event as InputEventKey
+
+	if not key_event.pressed:
 		return
 
-	if event.keycode != KEY_E:
+	if key_event.echo:
+		return
+
+	if key_event.keycode != KEY_E:
 		return
 
 	_open_tong_menu()

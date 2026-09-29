@@ -217,3 +217,10 @@ func _on_back_button_pressed() -> void:
 		return
 
 	back_pressed.emit()
+
+	if (
+		TutorialManager.is_tutorial_active
+		and TutorialManager.current_step
+		== TutorialManager.TutorialStep.SETTINGS_MENU
+	):
+		TutorialManager.complete_current_step()

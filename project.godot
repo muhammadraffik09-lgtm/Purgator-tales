@@ -33,6 +33,8 @@ LayarHitam1="*uid://cwa4ytddbo1ld"
 QuestManager="*uid://cu6hd43jpenqy"
 InventoryManager="*uid://b7v3ng8dcw1u2"
 AudioManager="*uid://o7u084ejbqyd"
+CoinManager="*uid://ba7p0b7v78krs"
+TutorialManager="*uid://b10ofosatveyx"
 
 [dialogue_manager]
 

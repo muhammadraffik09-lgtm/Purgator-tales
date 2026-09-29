@@ -25,6 +25,7 @@ func _ready():
 		$StartButton/StartLabel.text = "START"
 
 func _on_start_button_pressed():
+	TutorialManager.start_tutorial()
 	if not UITransitionManager.try_transition():
 		return
 
@@ -68,6 +69,16 @@ func _on_settings_menu_back_pressed():
 
 func _on_credits_menu_back_pressed():
 	credits_menu.visible = false
+
+	if opened_from_pause:
+		_return_to_pause_menu()
+
+	if (
+		TutorialManager.is_tutorial_active
+		and TutorialManager.current_step
+		== TutorialManager.TutorialStep.CREDITS_MENU
+	):
+		TutorialManager.complete_current_step()
 
 	if opened_from_pause:
 		_return_to_pause_menu()
