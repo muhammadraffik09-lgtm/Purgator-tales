@@ -12,6 +12,8 @@ extends Control
 var current_target: Control = null
 var current_world_target: Node2D = null
 
+const ARROW_TEXTURE_ANGLE_OFFSET := 0.0
+const SCREEN_ARROW_MARGIN := 80.0
 const HIGHLIGHT_PADDING := 12.0
 const WORLD_HIGHLIGHT_SIZE := Vector2(100.0, 120.0)
 const ARROW_GAP := 12.0
@@ -29,12 +31,31 @@ func _ready() -> void:
 	TutorialManager.tutorial_step_changed.connect(
 		_on_tutorial_step_changed
 	)
+	
+	var player := _get_player()
+
+	if player != null:
+		if not player.trash_bag_changed.is_connected(
+			_on_trash_bag_changed
+		):
+			player.trash_bag_changed.connect(
+				_on_trash_bag_changed
+			)
 
 
 func _process(_delta: float) -> void:
 	if not visible:
 		return
 
+	if (
+		TutorialManager.is_tutorial_active
+		and TutorialManager.current_step
+		== TutorialManager.TutorialStep.PROCESSING_INFO
+	):
+		if _is_any_result_available():
+			TutorialManager.complete_current_step()
+
+		return
 	if current_target != null:
 		if not is_instance_valid(current_target):
 			current_target = null
@@ -42,13 +63,13 @@ func _process(_delta: float) -> void:
 
 		_update_target_visuals()
 		return
-
 	if current_world_target != null:
 		if not is_instance_valid(current_world_target):
 			current_world_target = null
 			return
 
 		_update_world_target_visuals()
+		return
 
 
 func _on_tutorial_started() -> void:
@@ -85,9 +106,61 @@ func _on_tutorial_step_changed(step: TutorialManager.TutorialStep) -> void:
 
 		TutorialManager.TutorialStep.INTRO_B3_BIN:
 			_show_b3_bin_intro()
+			
+		TutorialManager.TutorialStep.INTRO_TRASH_BAG:
+			_show_trash_bag_tutorial()
+			
+		TutorialManager.TutorialStep.FILL_TRASH_BAG:
+			_start_fill_trash_bag_tutorial()
+
+		TutorialManager.TutorialStep.SORT_ORGANIC:
+			_show_sort_organic_tutorial()
+
+		TutorialManager.TutorialStep.SORT_INORGANIC:
+			_show_sort_inorganic_tutorial()
+
+		TutorialManager.TutorialStep.SORT_B3:
+			_show_sort_b3_tutorial()
+			
+		TutorialManager.TutorialStep.PROCESSING_INFO:
+			_show_processing_info()
+
+		TutorialManager.TutorialStep.TAKE_RESULT:
+			_show_take_result_tutorial()
+
+		TutorialManager.TutorialStep.INTRO_INVENTORY:
+			_show_inventory_tutorial()
 
 		_:
 			pass
+
+func _show_trash_bag_tutorial() -> void:
+	var target := get_tree().get_first_node_in_group(
+		"tutorial_trash_bag"
+	) as Control
+
+	if target == null:
+		push_error(
+			"TutorialUI: Trash Bag dengan group tutorial_trash_bag tidak ditemukan."
+		)
+		return
+
+	current_world_target = null
+	current_target = target
+
+	highlight.visible = true
+	dim_overlay.visible = true
+
+	title_label.text = "Trash Bag"
+	description_label.text = (
+		"Trash Bag digunakan untuk menyimpan sampah yang kamu ambil.\n\n"
+		+ "Isi Trash Bag sampai penuh untuk melanjutkan tutorial."
+	)
+
+	_set_continue_button_visible(true)
+
+	visible = true
+	_update_target_visuals()
 
 func _show_credits_menu_tutorial() -> void:
 	_set_continue_button_visible(false)
@@ -230,10 +303,6 @@ func _update_target_visuals() -> void:
 		highlight_size
 	)
 
-	_update_arrow(
-		highlight_position,
-		highlight_size
-	)
 
 
 func _update_spotlight(
@@ -276,25 +345,6 @@ func _update_spotlight(
 		normalized_size
 	)
 
-
-func _update_arrow(
-	target_position: Vector2,
-	target_size: Vector2
-) -> void:
-
-	var arrow_size := tutorial_arrow.size
-
-	tutorial_arrow.position = Vector2(
-		target_position.x
-			- arrow_size.x
-			- ARROW_GAP,
-
-		target_position.y
-			+ target_size.y / 2.0
-			- arrow_size.y / 2.0
-	)
-
-
 func hide_tutorial() -> void:
 	current_target = null
 	visible = false
@@ -330,7 +380,8 @@ func _on_continue_button_pressed() -> void:
 	match TutorialManager.current_step:
 		TutorialManager.TutorialStep.INTRO_ORGANIC_BIN, \
 		TutorialManager.TutorialStep.INTRO_INORGANIC_BIN, \
-		TutorialManager.TutorialStep.INTRO_B3_BIN:
+		TutorialManager.TutorialStep.INTRO_B3_BIN, \
+		TutorialManager.TutorialStep.INTRO_TRASH_BAG:
 			TutorialManager.complete_current_step()
 
 func _set_continue_button_visible(show_button: bool) -> void:
@@ -438,17 +489,12 @@ func _update_world_target_visuals() -> void:
 	)
 
 	highlight.visible = true
-	tutorial_arrow.visible = true
+
 
 	highlight.position = highlight_position
 	highlight.size = highlight_size
 
 	_update_spotlight(
-		highlight_position,
-		highlight_size
-	)
-
-	_update_arrow(
 		highlight_position,
 		highlight_size
 	)
@@ -469,8 +515,233 @@ func _set_world_target(group_name: String) -> bool:
 	current_world_target = target
 
 	highlight.visible = true
-	tutorial_arrow.visible = true
 
 	_update_world_target_visuals()
 
 	return true
+
+func _start_fill_trash_bag_tutorial() -> void:
+	current_target = null
+	current_world_target = null
+
+	dim_overlay.visible = false
+	highlight.visible = false
+
+	title_label.text = "Isi Trash Bag"
+
+	description_label.text = (
+	"Cari dan ambil sampah yang diberi highlight "
+	+ "sampai Trash Bag penuh."
+)
+
+	_set_continue_button_visible(false)
+
+	visible = true
+
+	# Highlight semua sampah di map.
+	_set_all_trash_highlight(true)
+
+	var player := _get_player()
+
+	if player != null:
+		_update_trash_bag_progress(player)
+
+func _get_player() -> Node2D:
+	return get_tree().get_first_node_in_group(
+		"player"
+	) as Node2D
+
+
+func _on_trash_bag_changed() -> void:
+	if not TutorialManager.is_tutorial_active:
+		return
+
+	if (
+		TutorialManager.current_step
+		!= TutorialManager.TutorialStep.FILL_TRASH_BAG
+	):
+		return
+
+	var player := _get_player()
+
+	if player == null:
+		return
+
+	_update_trash_bag_progress(player)
+
+	if player.is_trash_bag_full():
+		TutorialManager.complete_current_step()
+
+func _update_trash_bag_progress(player: Node) -> void:
+	var current_count: int = player.get_trash_bag_count()
+	var capacity: int = player.TRASH_BAG_CAPACITY
+
+	description_label.text = (
+		"Cari dan ambil sampah sampai Trash Bag penuh.\n"
+		+ "Benda yang bercahaya disekitarnya adalah sampah(Tutorial Only!).\n\n"
+		+ "Trash Bag: "
+		+ str(current_count)
+		+ "/"
+		+ str(capacity)
+	)
+
+func _set_all_trash_highlight(enabled: bool) -> void:
+	var trash_nodes := get_tree().get_nodes_in_group(
+		"tutorial_trash"
+	)
+
+	for node in trash_nodes:
+		if node == null:
+			continue
+
+		if not is_instance_valid(node):
+			continue
+
+		if node.has_method("set_tutorial_highlight"):
+			node.set_tutorial_highlight(enabled)
+
+func _show_sort_organic_tutorial() -> void:
+	current_target = null
+	current_world_target = null
+
+	dim_overlay.visible = false
+	highlight.visible = false
+
+	title_label.text = "Pisahkan Sampah Organik"
+
+	description_label.text = (
+		"Pergi ke Tong Sampah Organik dan tekan E.\n"
+		+ "Sampah Organik di Trash Bag akan dimasukkan ke tong."
+	)
+
+	_set_continue_button_visible(false)
+
+	visible = true
+
+func _show_sort_inorganic_tutorial() -> void:
+	current_target = null
+	current_world_target = null
+
+	dim_overlay.visible = false
+	highlight.visible = false
+
+	title_label.text = "Pisahkan Sampah Anorganik"
+
+	description_label.text = (
+		"Pergi ke Tong Sampah Anorganik dan tekan E.\n"
+		+ "Sampah Anorganik di Trash Bag akan dimasukkan ke tong."
+	)
+
+	_set_continue_button_visible(false)
+
+	visible = true
+
+func _show_sort_b3_tutorial() -> void:
+	current_target = null
+	current_world_target = null
+
+	dim_overlay.visible = false
+	highlight.visible = false
+
+	title_label.text = "Pisahkan Sampah B3"
+
+	description_label.text = (
+		"Pergi ke Tong Sampah B3 dan tekan E.\n"
+		+ "Sampah B3 di Trash Bag akan dimasukkan ke tong."
+	)
+
+	_set_continue_button_visible(false)
+
+	visible = true
+
+func _show_processing_info() -> void:
+	_set_all_trash_highlight(false)
+
+	current_target = null
+	current_world_target = null
+
+	dim_overlay.visible = false
+	highlight.visible = false
+
+	title_label.text = "Proses Pengolahan"
+
+	description_label.text = (
+		"Sampah sedang diproses.\n\n"
+		+ "Tunggu 10 detik sampai Result Sampah selesai dibuat."
+	)
+
+	_set_continue_button_visible(false)
+
+	visible = true
+
+
+func _show_take_result_tutorial() -> void:
+	current_target = null
+	current_world_target = null
+
+	dim_overlay.visible = false
+	highlight.visible = false
+	title_label.text = "Ambil Result Sampah"
+
+	description_label.text = (
+		"Result Sampah sudah selesai diproses.\n\n"
+		+ "Klik kiri 2 kali pada Result Sampah "
+		+ "untuk memasukkannya ke Inventory."
+	)
+
+	_set_continue_button_visible(false)
+
+	visible = true
+
+func _show_inventory_tutorial() -> void:
+	var target := get_tree().get_first_node_in_group(
+		"tutorial_inventory_button"
+	) as Control
+
+	if target == null:
+		push_error(
+			"TutorialUI: InventoryButton tidak ditemukan."
+		)
+		return
+
+	current_world_target = null
+	current_target = target
+
+	dim_overlay.visible = true
+	highlight.visible = true
+
+	title_label.text = "Inventory"
+
+	description_label.text = (
+		"Result Sampah yang kamu ambil "
+		+ "disimpan di Inventory.\n\n"
+		+ "Buka Inventory untuk melihat Result Sampah."
+	)
+
+	_set_continue_button_visible(false)
+
+	visible = true
+
+	_update_target_visuals()
+
+func _is_any_result_available() -> bool:
+	var tong_menus := get_tree().get_nodes_in_group(
+		"tong_sampah_menu"
+	)
+
+	for tong_menu in tong_menus:
+		if tong_menu == null:
+			continue
+
+		if not is_instance_valid(tong_menu):
+			continue
+
+		if not tong_menu.has_method(
+			"has_result_available"
+		):
+			continue
+
+		if tong_menu.has_result_available():
+			return true
+
+	return false

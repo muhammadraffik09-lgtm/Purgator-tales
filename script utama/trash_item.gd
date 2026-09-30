@@ -17,7 +17,12 @@ var trash_id: String = "Kumpulan Tanah"
 
 
 func _ready() -> void:
+	if trash_sprite.material != null:
+		trash_sprite.material = trash_sprite.material.duplicate()
+
 	_update_trash_sprite()
+
+	_update_tutorial_highlight()
 
 
 func _update_trash_sprite() -> void:
@@ -73,3 +78,29 @@ func _on_body_entered(body: Node2D) -> void:
 
 	print("Sampah diambil: ", trash_id, " | ", trash_type)
 	queue_free()
+
+func set_tutorial_highlight(enabled: bool) -> void:
+	var material := trash_sprite.material as ShaderMaterial
+
+	if material == null:
+		return
+
+	material.set_shader_parameter(
+		"highlight_enabled",
+		enabled
+	)
+
+func _update_tutorial_highlight() -> void:
+	if not TutorialManager.is_tutorial_active:
+		set_tutorial_highlight(false)
+		return
+
+	match TutorialManager.current_step:
+		TutorialManager.TutorialStep.FILL_TRASH_BAG, \
+		TutorialManager.TutorialStep.SORT_ORGANIC, \
+		TutorialManager.TutorialStep.SORT_INORGANIC, \
+		TutorialManager.TutorialStep.SORT_B3:
+			set_tutorial_highlight(true)
+
+		_:
+			set_tutorial_highlight(false)

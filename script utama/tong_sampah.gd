@@ -172,6 +172,8 @@ func _open_tong_menu() -> void:
 			": ",
 			moved_count
 		)
+		if moved_count > 0:
+			_notify_tutorial_sort_completed()
 	else:
 		push_error(
 			"TongSampah: Trash Bag Menu tidak memiliki "
@@ -195,3 +197,20 @@ func show_prompt_again() -> void:
 		return
 
 	_show_interaction_prompt()
+
+func _notify_tutorial_sort_completed() -> void:
+	if not TutorialManager.is_tutorial_active:
+		return
+
+	match TutorialManager.current_step:
+		TutorialManager.TutorialStep.SORT_ORGANIC:
+			if trash_type == "Organik":
+				TutorialManager.complete_current_step()
+
+		TutorialManager.TutorialStep.SORT_INORGANIC:
+			if trash_type == "Anorganik":
+				TutorialManager.complete_current_step()
+
+		TutorialManager.TutorialStep.SORT_B3:
+			if trash_type == "B3":
+				TutorialManager.complete_current_step()

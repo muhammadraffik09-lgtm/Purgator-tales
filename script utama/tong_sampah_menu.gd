@@ -274,45 +274,52 @@ func _add_result(
 		slot_index,
 		result_id
 	)
+	TutorialManager.notify_result_created()
 
 func take_result(slot_index: int) -> bool:
+	# Validasi index
 	if slot_index < 0:
 		return false
 
 	if slot_index >= result_items.size():
 		return false
 
+	# Ambil data Result Sampah
 	var item = result_items[slot_index]
 
 	if item == null:
 		return false
 
-	var item_id: String = item["id"]
+	var item_id: String = item.get("id", "")
 
-	# Coba masukkan hasil ke Inventory
-	var berhasil: bool = InventoryManager.add_item(item_id)
-
-	# Inventory penuh
-	if not berhasil:
-		print("Inventory penuh. Hasil tidak dapat diambil.")
+	if item_id == "":
 		return false
 
-	# Hapus hasil dari slot tong
+	var berhasil: bool = InventoryManager.add_item(
+		item_id,
+		trash_type
+	)
+
+	if not berhasil:
+		print("Inventory penuh.")
+		return false
+
 	result_items[slot_index] = null
 
-	# Bersihkan icon hasil
-	if slot_index < result_slots.size():
-		var item_icon := result_slots[slot_index].get_node_or_null(
-            "ItemIcon"
-		) as TextureRect
+	var item_icon := result_slots[slot_index].get_node_or_null(
+		"ItemIcon"
+	) as TextureRect
 
-		if item_icon:
-			item_icon.texture = null
-			item_icon.visible = false
+	if item_icon != null:
+		item_icon.texture = null
+		item_icon.visible = false
 
-		result_slots[slot_index].tooltip_text = ""
-
-	print("Hasil diambil: ", item_id)
+	print(
+		"Result diambil: ",
+		item_id,
+		" | ",
+		trash_type
+	)
 
 	return true
 
@@ -549,3 +556,10 @@ func _on_back_button_pressed() -> void:
 	if opened_by_tong != null:
 		if opened_by_tong.has_method("show_prompt_again"):
 			opened_by_tong.show_prompt_again()
+
+func has_result_available() -> bool:
+	for item in result_items:
+		if item != null:
+			return true
+
+	return false

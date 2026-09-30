@@ -21,5 +21,8 @@ func _pressed() -> void:
 
 	var berhasil: bool = tong_menu.take_result(slot_index)
 
+	if berhasil:
+		TutorialManager.notify_result_taken()
+
 	if not berhasil:
 		print("Hasil tidak dapat diambil.")
