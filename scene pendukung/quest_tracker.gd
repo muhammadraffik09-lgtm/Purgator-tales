@@ -1,24 +1,17 @@
 extends Control
 
-const TARGET_COIN: int = 500
+const TARGET_COIN: int = 1000
 
 @onready var quest_title: Label = $QuestContent/QuestTitle
 @onready var quest_desc: Label = $QuestContent/QuestDesc
 @onready var quest_progress: Label = $QuestContent/QuestProgress
 
-var quest_open: bool = false
-
-const PANEL_OPEN_X := 64.0
-const PANEL_CLOSED_X := -300.0
-const SLIDE_DURATION := 0.3
-
-var slide_tween: Tween
-
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 
-	global_position.x = PANEL_CLOSED_X
+	# Objective utama belum ditampilkan selama tutorial.
+	visible = false
 
 	TutorialManager.tutorial_finished.connect(
 		_on_tutorial_finished
@@ -29,29 +22,6 @@ func _ready() -> void:
 	)
 
 
-
-func _on_quest_button_pressed() -> void:
-	quest_open = !quest_open
-
-	if slide_tween:
-		slide_tween.kill()
-
-	slide_tween = create_tween()
-
-	var target_x: float
-
-	if quest_open:
-		target_x = PANEL_OPEN_X
-	else:
-		target_x = PANEL_CLOSED_X
-
-	slide_tween.tween_property(
-		self,
-		"global_position:x",
-		target_x,
-		SLIDE_DURATION
-	)
-
 func _on_tutorial_finished() -> void:
 	show_coin_objective()
 
@@ -60,7 +30,7 @@ func show_coin_objective() -> void:
 	quest_title.text = "Tujuan Utama"
 
 	quest_desc.text = (
-		"Dapatkan 500 Coin untuk menyelesaikan game."
+		"Dapatkan 1000 Coin untuk menyelesaikan game."
 	)
 
 	_update_coin_progress()

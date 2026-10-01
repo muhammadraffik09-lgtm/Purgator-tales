@@ -1,5 +1,6 @@
 extends Node
 
+signal tutorial_finished
 signal tutorial_started
 signal tutorial_step_changed(step: TutorialStep)
 signal tutorial_completed
@@ -27,15 +28,17 @@ enum TutorialStep {
 	PROCESSING_INFO,
 	TAKE_RESULT,
 	INTRO_INVENTORY,
+	SHOW_INVENTORY,
+	GO_TO_PRAKASA,
+	INTRO_SELL_MENU,
+	SELL_RESULT,
 
 	WAIT_PROCESSING,
 	TAKE_RESULTS,
 
 	OPEN_INVENTORY,
 
-	GO_TO_PRAKASA,
 	OPEN_SELL_MENU,
-	SELL_RESULT,
 	INTRO_COIN,
 
 	COMPLETED
@@ -97,9 +100,6 @@ func complete_current_step() -> void:
 		TutorialStep.RESUME_BUTTON:
 			set_step(TutorialStep.INTRO_ORGANIC_BIN)
 
-		TutorialStep.RESUME_BUTTON:
-			set_step(TutorialStep.INTRO_ORGANIC_BIN)
-
 		TutorialStep.INTRO_ORGANIC_BIN:
 			set_step(TutorialStep.INTRO_INORGANIC_BIN)
 
@@ -129,17 +129,17 @@ func complete_current_step() -> void:
 			
 		TutorialStep.TAKE_RESULT:
 			set_step(TutorialStep.INTRO_INVENTORY)
+
+		TutorialStep.INTRO_INVENTORY:
+			set_step(TutorialStep.SHOW_INVENTORY)
+
+		TutorialStep.SHOW_INVENTORY:
+			set_step(TutorialStep.GO_TO_PRAKASA)
+
+		TutorialStep.GO_TO_PRAKASA:
+			set_step(TutorialStep.INTRO_SELL_MENU)
 		_:
 			pass
-
-
-func finish_tutorial() -> void:
-	current_step = TutorialStep.COMPLETED
-	is_tutorial_active = false
-	tutorial_completed_this_session = true
-
-	tutorial_step_changed.emit(current_step)
-	tutorial_completed.emit()
 
 func notify_result_taken() -> void:
 	if not is_tutorial_active:
@@ -193,3 +193,70 @@ func _is_any_result_available() -> bool:
 			return true
 
 	return false
+
+func notify_inventory_opened() -> void:
+	if not is_tutorial_active:
+		return
+
+	if current_step != TutorialStep.INTRO_INVENTORY:
+		return
+
+	complete_current_step()
+
+
+func notify_inventory_closed() -> void:
+	if not is_tutorial_active:
+		return
+
+	if current_step != TutorialStep.SHOW_INVENTORY:
+		return
+
+	complete_current_step()
+
+
+func notify_sell_menu_opened() -> void:
+	if not is_tutorial_active:
+		return
+
+	if current_step != TutorialStep.GO_TO_PRAKASA:
+		return
+
+	complete_current_step()
+
+
+func notify_result_sold() -> void:
+	print("[TUTORIAL] notify_result_sold() dipanggil")
+	print(
+		"[TUTORIAL] Step saat jual: ",
+		TutorialStep.keys()[current_step]
+	)
+
+	if not is_tutorial_active:
+		print("[TUTORIAL] Tutorial tidak aktif.")
+		return
+
+	if current_step != TutorialStep.INTRO_SELL_MENU:
+		print(
+			"[TUTORIAL] Bukan step INTRO_SELL_MENU."
+		)
+		return
+
+	print("[TUTORIAL] Result berhasil dijual.")
+
+	finish_tutorial()
+
+
+func finish_tutorial() -> void:
+	if not is_tutorial_active:
+		return
+
+	print("=== TUTORIAL SELESAI ===")
+
+	current_step = TutorialStep.COMPLETED
+	is_tutorial_active = false
+	tutorial_completed_this_session = true
+
+	tutorial_step_changed.emit(current_step)
+
+	tutorial_finished.emit()
+	tutorial_completed.emit()

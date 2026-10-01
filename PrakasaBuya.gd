@@ -95,6 +95,7 @@ func _open_sell_menu() -> void:
 	sell_menu.visible = true
 
 	_hide_interaction_prompt()
+	TutorialManager.notify_sell_menu_opened()
 
 	AudioManager.play_ui_click()
 

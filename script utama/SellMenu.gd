@@ -76,6 +76,7 @@ func _sell_item(item_id: String, price: int) -> void:
 
 	var berhasil: bool = InventoryManager.remove_item(item_id)
 
+
 	print("remove_item berhasil: ", berhasil)
 	print("Jumlah sesudah: ", InventoryManager.get_item_count(item_id))
 
@@ -90,3 +91,4 @@ func _sell_item(item_id: String, price: int) -> void:
 	_refresh_sell_menu()
 
 	print("=== SELESAI JUAL ===")
+	TutorialManager.notify_result_sold()

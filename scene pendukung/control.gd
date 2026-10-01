@@ -119,6 +119,7 @@ func _on_inventory_button_pressed():
 		return
 
 	$InventoryMenu.visible = true
+	TutorialManager.notify_inventory_opened()
 
 	if $InventoryMenu.has_method("refresh_inventory"):
 		$InventoryMenu.refresh_inventory()

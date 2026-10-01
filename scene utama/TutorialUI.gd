@@ -32,6 +32,10 @@ func _ready() -> void:
 		_on_tutorial_step_changed
 	)
 	
+	TutorialManager.tutorial_finished.connect(
+		_on_tutorial_finished
+	)
+	
 	var player := _get_player()
 
 	if player != null:
@@ -131,6 +135,20 @@ func _on_tutorial_step_changed(step: TutorialManager.TutorialStep) -> void:
 		TutorialManager.TutorialStep.INTRO_INVENTORY:
 			_show_inventory_tutorial()
 
+		TutorialManager.TutorialStep.SHOW_INVENTORY:
+			_show_inventory_menu_tutorial()
+
+		TutorialManager.TutorialStep.GO_TO_PRAKASA:
+			_show_go_to_prakasa_tutorial()
+
+		TutorialManager.TutorialStep.INTRO_SELL_MENU:
+			_show_sell_menu_tutorial()
+
+		TutorialManager.TutorialStep.SELL_RESULT:
+			_show_sell_result_tutorial()
+
+		TutorialManager.TutorialStep.COMPLETED:
+			hide_tutorial()
 		_:
 			pass
 
@@ -347,6 +365,11 @@ func _update_spotlight(
 
 func hide_tutorial() -> void:
 	current_target = null
+	current_world_target = null
+
+	dim_overlay.visible = false
+	highlight.visible = false
+
 	visible = false
 
 func _show_resume_button_tutorial() -> void:
@@ -745,3 +768,128 @@ func _is_any_result_available() -> bool:
 			return true
 
 	return false
+
+func _show_inventory_menu_tutorial() -> void:
+	var target := get_tree().get_first_node_in_group(
+		"tutorial_inventory_menu"
+	) as Control
+
+	if target == null:
+		push_error(
+			"TutorialUI: InventoryMenu dengan group "
+			+ "tutorial_inventory_menu tidak ditemukan."
+		)
+		return
+
+	current_world_target = null
+	current_target = target
+
+	dim_overlay.visible = true
+	highlight.visible = true
+
+	title_label.text = "Inventory"
+
+	description_label.text = (
+		"Di Inventory, kamu dapat melihat Result Sampah "
+		+ "yang sudah kamu ambil.\n\n"
+		+ "Tutup Inventory untuk melanjutkan."
+	)
+
+	_set_continue_button_visible(false)
+
+	visible = true
+
+	_update_target_visuals()
+
+func _show_go_to_prakasa_tutorial() -> void:
+	var target := get_tree().get_first_node_in_group(
+		"tutorial_prakasa"
+	) as Node2D
+
+	if target == null:
+		push_error(
+			"TutorialUI: PrakasaBuya dengan group "
+			+ "tutorial_prakasa tidak ditemukan."
+		)
+		return
+
+	current_target = null
+	current_world_target = target
+
+	# Jangan gelapkan gameplay.
+	dim_overlay.visible = false
+	highlight.visible = false
+
+	title_label.text = "Prakasa Buya"
+
+	description_label.text = (
+		"Pergi ke Prakasa Buya untuk menjual Result Sampah.\n\n"
+		+ "Tekan E saat berada di dekat Prakasa Buya."
+	)
+
+	_set_continue_button_visible(false)
+
+	visible = true
+
+	_update_world_target_visuals()
+
+func _show_sell_menu_tutorial() -> void:
+	var target := get_tree().get_first_node_in_group(
+		"tutorial_sell_menu"
+	) as Control
+
+	if target == null:
+		push_error(
+			"TutorialUI: SellMenu tidak ditemukan."
+		)
+		return
+
+	current_world_target = null
+	current_target = target
+
+	dim_overlay.visible = true
+	highlight.visible = true
+
+	title_label.text = "Sell Menu"
+
+	description_label.text = (
+		"Di Sell Menu, kamu dapat menjual Result Sampah "
+		+ "kepada Prakasa Buya.\n\n"
+		+ "Tekan JUAL untuk menjual Result Sampah."
+	)
+
+	_set_continue_button_visible(false)
+
+	visible = true
+
+	_update_target_visuals()
+
+func _show_sell_result_tutorial() -> void:
+	current_target = null
+	current_world_target = null
+
+	dim_overlay.visible = false
+	highlight.visible = false
+
+	title_label.text = "Jual Result Sampah"
+
+	description_label.text = (
+		"Tekan tombol JUAL pada Result Sampah yang kamu miliki.\n\n"
+		+ "Setelah dijual, jumlah Result Sampah akan berkurang "
+		+ "dan Coin akan bertambah."
+	)
+
+	_set_continue_button_visible(false)
+
+	visible = true
+
+func _on_tutorial_finished() -> void:
+	print("[TutorialUI] Menutup tutorial.")
+
+	current_target = null
+	current_world_target = null
+
+	dim_overlay.visible = false
+	highlight.visible = false
+
+	visible = false

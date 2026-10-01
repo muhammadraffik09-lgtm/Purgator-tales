@@ -115,3 +115,4 @@ func _on_close_button_pressed() -> void:
 
 	AudioManager.play_ui_click()
 	visible = false
+	TutorialManager.notify_inventory_closed()
